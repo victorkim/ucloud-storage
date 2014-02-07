@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'httparty'
+require 'open-uri'
 
 module UcloudStorage
   class TotalyWrongException < StandardError; end
@@ -46,7 +47,7 @@ module UcloudStorage
     def upload_blob(blob, box_name, destination, content_type, &block)
       raise NotAuthorized if storage_url.nil?
 
-      target_url = File.join(storage_url, box_name, destination).to_s
+      target_url = File.join(storage_url, box_name, (URI::encode destination) ).to_s
       response = HTTParty.put(target_url,
                               headers: {
                                 "X-Auth-Token" => auth_token,
